@@ -160,8 +160,6 @@ body{
 </div>
 
 <script>
-const serverURL = "https://wedding-server-0ngz.onrender.com";
-
 let mediaList = [];
 let currentIndex = 0;
 
@@ -201,7 +199,7 @@ function createParticles(){
 function addPhotos(){ document.getElementById("fileInput").click(); }
 
 function loadStored(){
-  fetch(`${serverURL}/media`)
+  fetch('http://localhost:3000/media')
     .then(res=>res.json())
     .then(data=>{
       mediaList=data;
@@ -215,9 +213,9 @@ function renderGallery(){
   mediaList.forEach((item,index)=>{
     let media;
     if(item.type.startsWith("video")){
-      media=document.createElement("video"); media.src=serverURL+'/uploads/'+item.filename; media.controls=true;
+      media=document.createElement("video"); media.src='http://localhost:3000/uploads/'+item.filename; media.controls=true;
     }else{
-      media=document.createElement("img"); media.src=serverURL+'/uploads/'+item.filename;
+      media=document.createElement("img"); media.src='http://localhost:3000/uploads/'+item.filename;
     }
     gallery.appendChild(media);
     media.onclick=()=>openLightbox(index);
@@ -227,8 +225,8 @@ function renderGallery(){
 document.getElementById("fileInput").addEventListener("change",function(e){
   for(let file of e.target.files){
     let formData=new FormData();
-    formData.append('media',file);
-    fetch(serverURL+'/upload',{
+    formData.append('file',file);
+    fetch('http://localhost:3000/upload',{
       method:'POST',
       body:formData
     }).then(()=>loadStored());
@@ -246,11 +244,11 @@ function showLightbox(){
   let video=document.getElementById("lightbox-video");
   let item=mediaList[currentIndex];
   if(item.type.startsWith("video")){
-    video.src=serverURL+'/uploads/'+item.filename;
+    video.src='http://localhost:3000/uploads/'+item.filename;
     video.style.display="block";
     img.style.display="none";
   }else{
-    img.src=serverURL+'/uploads/'+item.filename;
+    img.src='http://localhost:3000/uploads/'+item.filename;
     img.style.display="block";
     video.style.display="none";
   }
@@ -263,7 +261,7 @@ function closeLightbox(){document.getElementById("lightbox").style.display="none
 function downloadAll(){
   mediaList.forEach((item,index)=>{
     let a=document.createElement("a");
-    a.href=serverURL+'/uploads/'+item.filename;
+    a.href='http://localhost:3000/uploads/'+item.filename;
     a.download=item.filename;
     a.click();
   });
